@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
+// SIGN_ADDRESS=http://10.0.0.119:80 ./update_mic_status_mac.js
+
 const { spawn } = require('child_process')
 const { request } = require('http')
-
-const SIGN_ADDRESS = 'http://10.0.0.119:80'
 
 const GET_MIC_RELATED_STREAM_COMMAND = '/usr/bin/log'
 const GET_MIC_RELATED_STREAM_ARGS = [
@@ -12,7 +12,7 @@ const GET_MIC_RELATED_STREAM_ARGS = [
   'eventMessage contains "BuiltInHeadphoneInputDevice"',
 ]
 
-const url = new URL(SIGN_ADDRESS)
+const url = new URL(process.env.SIGN_ADDRESS)
 
 const stream = spawn(
   GET_MIC_RELATED_STREAM_COMMAND,
