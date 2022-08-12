@@ -1,4 +1,5 @@
-import array, time
+import array
+import time
 from machine import Pin
 import rp2
 
@@ -11,11 +12,11 @@ def ws2812():
     T3 = 3
     wrap_target()
     label("bitloop")
-    out(x, 1)               .side(0)    [T3 - 1]
-    jmp(not_x, "do_zero")   .side(1)    [T1 - 1]
-    jmp("bitloop")          .side(1)    [T2 - 1]
+    out(x, 1)               .side(0)[T3 - 1]
+    jmp(not_x, "do_zero")   .side(1)[T1 - 1]
+    jmp("bitloop")          .side(1)[T2 - 1]
     label("do_zero")
-    nop()                   .side(0)    [T2 - 1]
+    nop()                   .side(0)[T2 - 1]
     wrap()
 
 
@@ -27,11 +28,11 @@ def sk6812():
     T3 = 3
     wrap_target()
     label("bitloop")
-    out(x, 1)               .side(0)    [T3 - 1]
-    jmp(not_x, "do_zero")   .side(1)    [T1 - 1]
-    jmp("bitloop")          .side(1)    [T2 - 1]
+    out(x, 1)               .side(0)[T3 - 1]
+    jmp(not_x, "do_zero")   .side(1)[T1 - 1]
+    jmp("bitloop")          .side(1)[T2 - 1]
     label("do_zero")
-    nop()                   .side(0)    [T2 - 1]
+    nop()                   .side(0)[T2 - 1]
     wrap()
 
 
@@ -88,12 +89,14 @@ class Neopixel:
         self.W_in_mode = 'W' in mode
         if self.W_in_mode:
             # RGBW uses different PIO state machine configuration
-            self.sm = rp2.StateMachine(state_machine, sk6812, freq=8000000, sideset_base=Pin(pin))
+            self.sm = rp2.StateMachine(
+                state_machine, sk6812, freq=8000000, sideset_base=Pin(pin))
             # tuple of values required to shift bit into position (check class desc.)
             self.shift = ((mode.index('R') ^ 3) * 8, (mode.index('G') ^ 3) * 8,
                           (mode.index('B') ^ 3) * 8, (mode.index('W') ^ 3) * 8)
         else:
-            self.sm = rp2.StateMachine(state_machine, ws2812, freq=8000000, sideset_base=Pin(pin))
+            self.sm = rp2.StateMachine(
+                state_machine, ws2812, freq=8000000, sideset_base=Pin(pin))
             self.shift = (((mode.index('R') ^ 3) - 1) * 8, ((mode.index('G') ^ 3) - 1) * 8,
                           ((mode.index('B') ^ 3) - 1) * 8, 0)
         self.sm.active(1)
@@ -147,7 +150,8 @@ class Neopixel:
             # if it's (r, g, b, w)
             if with_W:
                 white = round(w_diff * fraction + left_rgb_w[3])
-                self.set_pixel(left_pixel + i, (red, green, blue, white), how_bright)
+                self.set_pixel(
+                    left_pixel + i, (red, green, blue, white), how_bright)
             else:
                 self.set_pixel(left_pixel + i, (red, green, blue), how_bright)
 

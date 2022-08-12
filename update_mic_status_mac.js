@@ -10,6 +10,8 @@ const GET_MIC_RELATED_STREAM_ARGS = [
   'stream',
   '--predicate',
   'eventMessage contains "BuiltInHeadphoneInputDevice"',
+  '--predicate',
+  'eventMessage contains "BuiltInMicrophoneDevice"',
 ]
 
 const url = new URL(process.env.SIGN_ADDRESS)
@@ -18,6 +20,8 @@ const stream = spawn(
   GET_MIC_RELATED_STREAM_COMMAND,
   GET_MIC_RELATED_STREAM_ARGS,
 )
+
+console.log('listening to log stream')
 
 stream.stdout.on('data', async (data) => {
   const message = data.toString()
@@ -31,6 +35,7 @@ stream.stdout.on('data', async (data) => {
 
   const payload = isStarting ? 'led_on' : 'led_off'
 
+  console.log('sending payload', payload)
   try {
     await new Promise((resolve, reject) => {
       const options = {
