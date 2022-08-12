@@ -1,11 +1,13 @@
 import network
 import socket
 import time
+from neopixel import Neopixel
 
 from params import params
 
 led = machine.Pin('LED', machine.Pin.OUT)
-
+pixels = Neopixel(params['numberOfPixels'], 0, 28, "GRB")
+pixels.brightness(params['brightness'])
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(params['ssid'], params['password'])
@@ -56,10 +58,14 @@ while True:
 
         if led_on != -1:
             led.value(1)
+            pixels.fill(params['onColor'])
+            pixels.show()
             cl.send('led_on')
 
         if led_off != -1:
             led.value(0)
+            pixels.fill(params['offColor'])
+            pixels.show()
             cl.send('led_off')
 
         cl.close()
