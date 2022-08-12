@@ -2,7 +2,7 @@
 
 const { execSync } = require('child_process')
 const { join, resolve } = require('path')
-const { writeFileSync } = require('fs')
+const { writeFileSync, mkdirSync } = require('fs')
 
 const whichNode = execSync('which node').toString().trim()
 const scriptPath = join(__dirname, 'watch_mic_status_mac.js')
@@ -24,13 +24,10 @@ const comUserOnAir = `<?xml version="1.0" encoding="UTF-8"?>
 </plist>
 `
 
-const plistFilePath = resolve(
-  process.env.HOME,
-  'Library/LaunchAgents',
-  'com.user.onair.plist',
-)
+const plistFilePath = resolve(process.env.HOME, 'Library/LaunchAgents')
 
-writeFileSync(plistFilePath, comUserOnAir)
+mkdirSync(plistFilePath, { recursive: true })
+writeFileSync(join(plistFilePath, 'com.user.onair.plist'), comUserOnAir)
 
 console.log(
   execSync(
