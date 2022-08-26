@@ -12,3 +12,7 @@ Software for the 'On Air' sign controlled by Mac's microphone status. It lights 
 4. Create `watcher_params.json` from `watcher_params_sample.json`.
 5. Fill the `SIGN_ADDRESS` in `watcher_params.json` using saved IP address.
 6. Execute `./setup_watcher_autoload.js` to setup automatic script execution on user login.
+
+# Circuit Diagram
+
+![Diagram](https://user-images.githubusercontent.com/15819745/186831340-e5e67270-2aed-415d-bc47-c7b060db5ee6.svg)
