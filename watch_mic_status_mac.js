@@ -8,9 +8,9 @@ const GET_MIC_RELATED_STREAM_COMMAND = '/usr/bin/log'
 const GET_MIC_RELATED_STREAM_ARGS = [
   'stream',
   '--predicate',
-  'eventMessage contains "BuiltInHeadphoneInputDevice"',
+  'sender contains "CoreAudio"',
   '--predicate',
-  'eventMessage contains "BuiltInMicrophoneDevice"',
+  'eventMessage contains "HALS_IOContext_Legacy_Impl::IOThreadEntry"',
 ]
 
 const url = new URL(params.SIGN_ADDRESS)
@@ -25,8 +25,19 @@ console.log('listening to log stream')
 stream.stdout.on('data', async (data) => {
   const message = data.toString()
 
-  const isStarting = message.lastIndexOf('starting') != -1
-  const isStopping = message.lastIndexOf('stopping') != -1
+  const hasInputDevice = [
+    'BuiltInMicrophoneDevice',
+    'BuiltInHeadphoneInputDevice',
+    'AppleUSBAudioEngine',
+    ':input',
+  ].some((it) => message.includes(it))
+
+  if (!hasInputDevice) {
+    return
+  }
+
+  const isStarting = message.includes('starting')
+  const isStopping = message.includes('stopping')
 
   if (!isStarting && !isStopping) {
     return
